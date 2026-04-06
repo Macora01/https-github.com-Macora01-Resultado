@@ -84,6 +84,7 @@ async function initDb() {
 
 initDb().catch(console.error);
 
+// Facore Financial Dashboard - Production Ready
 const app = express();
 app.use(express.json());
 
