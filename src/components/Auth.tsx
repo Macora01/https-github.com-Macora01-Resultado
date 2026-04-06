@@ -16,15 +16,22 @@ export const Auth = ({ onLogin }: { onLogin: (user: any) => void }) => {
         body: JSON.stringify({ email, password }),
       });
       
-      const data = await response.json();
       if (response.ok) {
+        const data = await response.json();
         localStorage.setItem('facore_token', data.token);
         onLogin(data.user);
       } else {
-        alert(data.error || 'Error al iniciar sesión');
+        let errorMessage = 'Error al iniciar sesión';
+        try {
+          const data = await response.json();
+          errorMessage = data.error || errorMessage;
+        } catch (e) {
+          errorMessage = `Error del servidor (${response.status}): El servidor no devolvió una respuesta válida.`;
+        }
+        alert(errorMessage);
       }
     } catch (err) {
-      alert('Error de conexión con el servidor. Verifica que el backend esté corriendo.');
+      alert(`Error de conexión: No se pudo contactar con el servidor. Verifica que el backend esté corriendo en el puerto correcto.`);
     } finally {
       setIsLoading(false);
     }
